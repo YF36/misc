@@ -594,8 +594,8 @@ imap <C-L>  <C-X><C-L>
 :inoremap ] <c-r>=ClosePair(']')<CR>
 
 " au:autocmd
-au FileType c,cpp,java :inoremap " ""<ESC>i
-au FileType c,cpp,java :inoremap ' ''<ESC>i
+au FileType c,cpp,java,go :inoremap " ""<ESC>i
+au FileType c,cpp,java,go :inoremap ' ''<ESC>i
 
 "au FileType html,xml :inoremap < <><ESC>i
 "au FileType html,xml :inoremap > <c-r>=ClosePair('>')<CR>
