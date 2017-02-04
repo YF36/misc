@@ -657,4 +657,4 @@ let g:go_play_open_browser = 0
 
 " golint
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cw
+au BufWritePost,FileWritePost *.go execute 'Lint' | cw
