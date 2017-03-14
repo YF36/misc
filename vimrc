@@ -18,6 +18,7 @@ Plugin 'Shougo/neocomplete.vim'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdtree'
 Plugin 'fatih/vim-go'
+Bundle 'uarun/vim-protobuf'
 
 " Plugins on Vim repo
 Bundle 'SuperTab'
@@ -469,11 +470,11 @@ set shiftwidth=4
 au FileType go set softtabstop=8
 au FileType go set shiftwidth=8
 
-au FileType c,cpp,proto set softtabstop=2
-au FileType c,cpp,proto set shiftwidth=2
+au FileType c,cpp set softtabstop=2
+au FileType c,cpp set shiftwidth=2
 
-au FileType html,xml set softtabstop=2
-au FileType html,xml set shiftwidth=2
+" au FileType html,xml set softtabstop=2
+" au FileType html,xml set shiftwidth=2
 
 au BufRead,BufNewFile *.html,*.jsp,*.tpl,*.htm set softtabstop=2 shiftwidth=2
 "au BufRead,BufNewFile *.js set syntax=jquery
