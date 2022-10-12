@@ -13,12 +13,15 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " Plugins on GitHub
-Plugin 'tpope/vim-fugitive'
-Plugin 'Shougo/neocomplete.vim'
+" Plugin 'tpope/vim-fugitive'
+" Plugin 'Shougo/deoplete.nvim'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdtree'
+Bundle 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'fatih/vim-go'
 Bundle 'uarun/vim-protobuf'
+Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 
 " Plugins on Vim repo
 Bundle 'SuperTab'
@@ -180,7 +183,7 @@ set showmatch
 " 2. Add =,; pattern match for languages like c, c++,java
 "--------------------------------------------------------------------
 au FileType html,xml set mps+=<:>
-au FileType c,cpp,java set mps+==:;
+au FileType c,cpp,cc,java set mps+==:;
 
 "--------------------------------------------------------------------
 " Hightlight search things
@@ -200,7 +203,17 @@ set nowrapscan
 "--------------------------------------------------------------------
 " Set backspace
 "--------------------------------------------------------------------
+"set cursorline
 set backspace=eol,start,indent
+set matchpairs+=<:>
+
+"--------------------------------------------------------------------
+" Set colorcolumn
+"--------------------------------------------------------------------
+"set colorcolumn=100 " The code width line
+"highlight ColorColumn ctermbg=DarkGray guibg=LightGray
+"highlight clear SpellBad
+"highlight SpellBad cterm=underline,italic gui=underline,italic
 
 "--------------------------------------------------------------------
 " Allow the left and right arrow keys, as well as h and l,
@@ -246,21 +259,6 @@ set laststatus=2
 "Files and backups
 """""""""""""""""""""""""""""""""""""""""""""""
 set nobackup
-
-"--------------------------------------------------------------------
-" Turn backup on
-"--------------------------------------------------------------------
-"set backup
-
-"--------------------------------------------------------------------
-" Set the extension of the backup file
-"--------------------------------------------------------------------
-"set backupext=.bak
-
-"--------------------------------------------------------------------
-" Save the original version
-"--------------------------------------------------------------------
-"set patchmode=.orig
 
 """""""""""""""""""""""""""""""""""""""""""""""
 " Buffer related
@@ -459,7 +457,7 @@ set nowrap
 " Line width and auto line break
 "--------------------------------------------------------------------
 set lbr
-au FileType c,cpp,java,python set tw=80
+au FileType c,cpp,java,python set tw=100
 
 "--------------------------------------------------------------------
 " Tab and space
@@ -476,7 +474,7 @@ au FileType c,cpp set shiftwidth=2
 " au FileType html,xml set softtabstop=2
 " au FileType html,xml set shiftwidth=2
 
-au BufRead,BufNewFile *.html,*.jsp,*.tpl,*.htm set softtabstop=2 shiftwidth=2
+au BufRead,BufNewFile *.sql,*.html,*.jsp,*.tpl,*.htm set softtabstop=2 shiftwidth=2
 "au BufRead,BufNewFile *.js set syntax=jquery
 
 set expandtab
@@ -489,7 +487,7 @@ set expandtab
 " ctags setting
 "--------------------------------------------------------------------
 
-set tags=tags
+set tags=tags;/
 "set autochdir
 
 " Call AutoLoadCTagsAndCScope()
@@ -531,9 +529,9 @@ nmap <leader>ct :call AutoLoadCTagsAndCScope()<CR>
 """""""""""""""""""""""""""""""""""""""""""""""
 " Quick Fix
 """""""""""""""""""""""""""""""""""""""""""""""
-nmap <leader>cn :cn<cr>
-nmap <leader>cp :cp<cr>
-nmap <leader>cw :cw 10<cr>
+"nmap <leader>cn :cn<cr>
+"nmap <leader>cp :cp<cr>
+"nmap <leader>cw :cw 10<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""
 " Hotkeys
@@ -609,11 +607,14 @@ function ClosePair(char)
     endif
 endf
 
-"""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins setting
-"""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" tagbar
+" --------------------------- tagbar ------------------------------ "
+let g:tagbar_compact=1
+let g:tagbar_width=40
+let g:tagbar_autoshowtag = 1
 let g:tagbar_left=1
 let g:tagbar_sort=0
 let g:tagbar_iconchars = ['+', '>']
@@ -622,40 +623,83 @@ nnoremap <silent> T :TagbarToggle<CR>
 au BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx,*.java,*.go call tagbar#autoopen()
 
 " neocomplete
-let g:neocomplete#enable_at_startup=1
+" let g:neocomplete#enable_at_startup=1
+" let g:deoplete#enable_at_startup = 1
 
-" nerdtree
+" --------------------------- nerdtree ------------------------------ "
 let NERDTreeWinPos='right'
+let NERDTreeWinSize=40
 " nnoremap <silent> <C-F> :NERDTreeToggle<CR>
 nnoremap <silent> F :NERDTreeToggle<CR>
-augroup filetype
-    autocmd! BufRead,BufNewFile BUILD set filetype=blade
-augroup end
 
-" vim-go
-au FileType go nmap <leader>gb <Plug>(go-build)
-au FileType go nmap <leader>gt <Plug>(go-test)
-au FileType go nmap <leader>gc <Plug>(go-coverage)
-au FileType go nmap <leader>gr <Plug>(go-run)
+" Auto quit NERDTree when vim is quited
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
 
-au FileType go nmap <Leader>gd <Plug>(go-doc)
-au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+" --------------------------- vim-gutentags ------------------------------ "
+" The gutentags is used to auto generate tag, it is still usefull for most,
+" as it is quite fast, although the match result maybe wrong at sometimes.
+" Usage:
+" (1) go to definition of current word: Ctrl-];
+" (2) go back: Ctrl-t
 
-au FileType go nmap <Leader>gds <Plug>(go-def-split)
-au FileType go nmap <Leader>gdv <Plug>(go-def-vertical)
-au FileType go nmap <Leader>gdt <Plug>(go-def-tab)
+" gutentags搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归 "
+let g:gutentags_project_root = ['.repo']
 
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
+" gutentags默认工程目录标识为`['.git', '.hg', '.svn', '.bzr', '_darcs', '_darcs', '_FOSSIL_', '.fslckout']`
+" gutentags_add_default_project_roots为1（默认为1）时会自动追加到gutentags_project_root
+let g:gutentags_add_default_project_roots = 0
 
-" let g:go_fmt_autosave = 0
-" let g:go_fmt_command = "goimports"
-let g:go_play_open_browser = 0
+let g:gutentags_generate_on_new = 1
+let g:gutentags_generate_on_missing = 1
+let g:gutentags_generate_on_write = 1
+let g:gutentags_generate_on_empty_buffer = 0
 
-" golint
-set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-au BufWritePost,FileWritePost *.go execute 'Lint' | cw
+" 所生成的数据文件的名称 "
+let g:gutentags_ctags_tagfile = '.tags'
+
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录 "
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+
+" 检测 ~/.cache/tags 不存在就新建 "
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+endif
+
+" 配置 ctags 的参数 "
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+let g:gutentags_ctags_exclude = [
+\  '*.git', '*.svn', '*.hg',
+\  'cache', 'dist', 'bin', 'node_modules', 'bower_components',
+\  '*-lock.json',  '*.lock',
+\  '*.min.*',
+\  'CMakeLists.txt',
+\  '*.bak',
+\  '*.zip',
+\  '*.pyc',
+\  '*.class',
+\  '*.sln',
+\  '*.csproj', '*.csproj.user',
+\  '*.tmp',
+\  '*.cache',
+\  '*.vscode',
+\  '*.pdb',
+\  '*.pb',
+\  '*.exe', '*.dll', '*.bin',
+\  '*.mp3', '*.ogg', '*.flac',
+\  '*.swp', '*.swo',
+\  '.DS_Store', '*.plist',
+\  '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png', '*.svg',
+\  '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+\  '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx', '*.xls',
+\]
+
+" --------------------------- cpp highlight ------------------------------ "
+let g:cpp_class_scope_highlight = 0
+let g:cpp_member_variable_highlight = 0
+let g:cpp_class_decl_highlight = 0
+let g:cpp_experimental_template_highlight = 0
+let g:cpp_concepts_highlight = 0
