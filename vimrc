@@ -120,7 +120,7 @@ set fdm=manual
 "--------------------------------------------------------------------
 "colo desertEx
 "colo vividchalk
-"set background=dark
+set background=dark
 "colorscheme solarized
 
 "--------------------------------------------------------------------
