@@ -22,8 +22,7 @@ Plugin 'fatih/vim-go'
 Bundle 'uarun/vim-protobuf'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'octol/vim-cpp-enhanced-highlight'
-" run `npm install` in ~/.vim/bundle/coc.nvim/ if error: [coc.nvim] build/index.js not found
-Plugin 'neoclide/coc.nvim'
+" Plugin 'neoclide/coc.nvim'
 
 " Plugins on Vim repo
 Bundle 'SuperTab'
@@ -148,12 +147,12 @@ set so=7
 " When calling commands such as p,y, put contents
 " into system clipboard
 "--------------------------------------------------------------------
-set clipboard+=unnamed
+set clipboard+=unnamed 
 
 "--------------------------------------------------------------------
 " Make sure it can save viminfo
 "--------------------------------------------------------------------
-set viminfo+=!
+set viminfo+=!         
 
 "--------------------------------------------------------------------
 " Turn on Wild menu
@@ -404,10 +403,10 @@ set encoding=utf-8
 "
 "--------------------------------------------------------------------
 " This is a list of character encodings considered when starting to edit
-" an existing file.
+" an existing file. 
 "
-" When a file is read, Vim tries to use the first mentioned character encoding.
-" If an error is detected, the next one in the list is tried.
+" When a file is read, Vim tries to use the first mentioned character encoding. 
+" If an error is detected, the next one in the list is tried. 
 "
 " When an encoding is found that works, 'fileencoding' is set to it. If all fail,
 " 'fileencoding' is set to an empty string, which means the value of 'encoding'
@@ -474,7 +473,7 @@ au FileType go set shiftwidth=8
 au FileType c,cpp set softtabstop=2
 au FileType c,cpp set shiftwidth=2
 
-au BufRead,BufNewFile *.sql,*.html,*.jsp,*.tpl,*.htm,*.proto set softtabstop=2 shiftwidth=2
+au BufRead,BufNewFile *.sql,*.html,*.jsp,*.tpl,*.htm set softtabstop=2 shiftwidth=2
 "au BufRead,BufNewFile *.js set syntax=jquery
 au BufRead,BufNewFile *.textproto set syntax=protobuf
 
@@ -621,7 +620,7 @@ let g:tagbar_sort=0
 let g:tagbar_iconchars = ['+', '>']
 " nnoremap <silent> <C-T> :TagbarToggle<CR>
 nnoremap <silent> T :TagbarToggle<CR>
-au BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx,*.java,*.go call tagbar#autoopen()
+"au BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx,*.java,*.go call tagbar#autoopen()
 
 " neocomplete
 " let g:neocomplete#enable_at_startup=1
@@ -643,8 +642,13 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeT
 " (1) go to definition of current word: Ctrl-];
 " (2) go back: Ctrl-t
 
+let g:gutentags_enabled = 0
+augroup auto_gutentags
+    au FileType c,cpp,javascript,python,java,scala,sh,groovy,vim let g:gutentags_enabled=1
+augroup plug#end
+
 " gutentags搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归 "
-let g:gutentags_project_root = ['.repo']
+let g:gutentags_project_root = ['.repo', '.git']
 
 " gutentags默认工程目录标识为`['.git', '.hg', '.svn', '.bzr', '_darcs', '_darcs', '_FOSSIL_', '.fslckout']`
 " gutentags_add_default_project_roots为1（默认为1）时会自动追加到gutentags_project_root
