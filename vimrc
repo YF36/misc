@@ -18,11 +18,11 @@ Plugin 'gmarik/Vundle.vim'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plugin 'fatih/vim-go'
 Bundle 'uarun/vim-protobuf'
-Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'octol/vim-cpp-enhanced-highlight'
-" Plugin 'neoclide/coc.nvim'
+Plugin 'dgryski/vim-godef'
+Plugin 'fatih/vim-go', { 'tag': '*' }
+Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Plugins on Vim repo
 Bundle 'SuperTab'
@@ -119,7 +119,7 @@ set fdm=manual
 "--------------------------------------------------------------------
 "colo desertEx
 "colo vividchalk
-set background=dark
+"set background=dark
 "colorscheme solarized
 
 "--------------------------------------------------------------------
@@ -473,6 +473,9 @@ au FileType go set shiftwidth=8
 au FileType c,cpp set softtabstop=2
 au FileType c,cpp set shiftwidth=2
 
+" au FileType html,xml set softtabstop=2
+" au FileType html,xml set shiftwidth=2
+
 au BufRead,BufNewFile *.sql,*.html,*.jsp,*.tpl,*.htm set softtabstop=2 shiftwidth=2
 "au BufRead,BufNewFile *.js set syntax=jquery
 au BufRead,BufNewFile *.textproto set syntax=protobuf
@@ -620,11 +623,11 @@ let g:tagbar_sort=0
 let g:tagbar_iconchars = ['+', '>']
 " nnoremap <silent> <C-T> :TagbarToggle<CR>
 nnoremap <silent> T :TagbarToggle<CR>
-"au BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx,*.java,*.go call tagbar#autoopen()
+au BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx,*.java,*.go call tagbar#autoopen()
 
 " neocomplete
 " let g:neocomplete#enable_at_startup=1
-" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup=1
 
 " --------------------------- nerdtree ------------------------------ "
 let NERDTreeWinPos='right'
@@ -644,11 +647,11 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeT
 
 let g:gutentags_enabled = 0
 augroup auto_gutentags
-    au FileType c,cpp,javascript,python,java,scala,sh,groovy,vim let g:gutentags_enabled=1
+    au FileType c,cpp,javascript,python,java,sh,vim,go let g:gutentags_enabled=1
 augroup plug#end
 
 " gutentags搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归 "
-let g:gutentags_project_root = ['.repo', '.git']
+let g:gutentags_project_root = ['.repo', '.git', 'WORKSPACE']
 
 " gutentags默认工程目录标识为`['.git', '.hg', '.svn', '.bzr', '_darcs', '_darcs', '_FOSSIL_', '.fslckout']`
 " gutentags_add_default_project_roots为1（默认为1）时会自动追加到gutentags_project_root
